@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('entradas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->index();
-            $table->enum('tipo', [])->index();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('tipo', ['general', 'adulto mayor', 'estudiantes', 'niños'])->index();
             $table->date('fecha_compra');
             $table->date('fecha_visita')->nullable()->index();
             $table->integer('cantidad');

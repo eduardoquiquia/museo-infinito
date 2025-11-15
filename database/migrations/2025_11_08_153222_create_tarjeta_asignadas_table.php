@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('tarjeta_asignadas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->index();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('fecha_vinculacion')->index();
             $table->string('numero_tarjeta', 20)->unique();
             $table->enum('estado', ['activa', 'inactiva', 'bloqueada'])->default('activa')->index();

@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('pedido_detalles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pedido_id')->constrained('pedidos')->onDelete('cascade')->index();
-            $table->foreignId('producto_id')->constrained('productos')->onDelete('restrict')->index();
+            $table->foreignId('pedido_id')->constrained('pedidos')->onDelete('cascade');
+            $table->foreignId('producto_id')->constrained('productos')->onDelete('restrict');
             $table->integer('cantidad');
             $table->decimal('subtotal', 10, 2);
 

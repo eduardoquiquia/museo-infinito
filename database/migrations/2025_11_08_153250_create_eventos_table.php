@@ -14,8 +14,8 @@ return new class extends Migration
             $table->text('descripcion');
             $table->date('fecha')->index();
             $table->time('hora');
-            $table->enum('ubicacion', []);
-            $table->enum('categoria', [])->index();
+            $table->enum('ubicacion', ['sala_principal', 'auditorio', 'jardin', 'sala_exposiciones']);
+            $table->enum('categoria', ['concierto', 'exposicion', 'taller', 'conferencia'])->index();
             $table->decimal('precio', 8, 2);
             $table->integer('capacidad');
             $table->string('ruta_imagen')->nullable();
