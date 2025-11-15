@@ -27,7 +27,7 @@ class Reserva extends Model
         return [
             'user_id' => 'integer',
             'fecha' => 'date',
-            'hora' => 'time',
+            'hora' => 'datetime',
             'personas' => 'integer'
         ];
     }

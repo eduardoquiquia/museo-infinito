@@ -13,12 +13,12 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::orderBy('name')->paginate(5);
-        return view('users.index', compact('usuarios'));
+        return view('usuarios.index', compact('usuarios'));
     }
 
     public function create()
     {
-        return view('users.create');
+        return view('usuarios.create');
     }
 
     public function store(Request $request)
@@ -40,7 +40,7 @@ class UserController extends Controller
                 'estado' => $request->estado
             ]);
 
-            return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
+            return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error creando usuario: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Ocurrió un error al crear el usuario.');
@@ -50,13 +50,13 @@ class UserController extends Controller
     public function show(string $id)
     {
         $usuario = User::findOrFail($id);
-        return view('users.show', compact('usuario'));
+        return view('usuarios.show', compact('usuario'));
     }
 
     public function edit(string $id)
     {
         $usuario = User::findOrFail($id);
-        return view('users.edit', compact('usuario'));
+        return view('usuarios.edit', compact('usuario'));
     }
 
     public function update(Request $request, string $id)
@@ -85,7 +85,7 @@ class UserController extends Controller
 
             $usuario->update($datos);
 
-            return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
+            return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error actualizando usuario: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Ocurrió un error al actualizar el usuario.');
@@ -98,7 +98,7 @@ class UserController extends Controller
             $usuario = User::findOrFail($id);
             $usuario->delete();
 
-            return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+            return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error eliminando usuario: ' . $e->getMessage());
             return back()->with('error', 'Ocurrió un error al eliminar el usuario.');

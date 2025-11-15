@@ -28,7 +28,7 @@ class Evento extends Model
     {
         return [
             'fecha' => 'date',
-            'hora' => 'time',
+            'hora' => 'datetime',
             'precio' => 'decimal:2',
             'capacidad' => 'integer',
         ];
