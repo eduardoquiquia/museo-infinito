@@ -1,8 +1,9 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExhibicionController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductoController;
 
 // Home
 Route::get('/', function () {
@@ -39,3 +40,8 @@ Route::get('/sobre', function() {
 Route::get('/contacto', function() {
     return view('contacto.index');
 })->name('contacto.index');
+
+Route::resource('usuarios', UserController::class);
+Route::resource('productos', ProductoController::class);
+Route::resource('eventos', EventoController::class);
+Route::resource('exhibiciones', ExhibicionController::class);
