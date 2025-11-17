@@ -8,9 +8,9 @@ use App\Http\Controllers\ExhibicionController;
 
 Route::get('/', function () {
     return view('home');
-});
+}); 
 
-Route::resource('usuarios', UserController::class);
+Route::resource('users', UserController::class);
 Route::resource('productos', ProductoController::class);
 Route::resource('eventos', EventoController::class);
 Route::resource('exhibiciones', ExhibicionController::class);

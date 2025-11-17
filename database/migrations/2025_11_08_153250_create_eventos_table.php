@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nombre')->index();
             $table->text('descripcion');
             $table->date('fecha')->index();
-            $table->time('hora');
+            $table->string('hora');
             $table->enum('ubicacion', ['sala_principal', 'auditorio', 'jardin', 'sala_exposiciones']);
             $table->enum('categoria', ['concierto', 'exposicion', 'taller', 'conferencia'])->index();
             $table->decimal('precio', 8, 2);

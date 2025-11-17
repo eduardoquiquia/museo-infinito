@@ -9,6 +9,10 @@ class Evento extends Model
 {
     use HasFactory;
 
+    const UBICACIONES = ['sala_principal', 'auditorio', 'jardin', 'sala_exposiciones'];
+    const CATEGORIAS = ['concierto', 'exposicion', 'taller', 'conferencia'];
+    const ESTADOS = ['activo', 'inactivo', 'cancelado'];
+
     /** @var list<string> */
     protected $fillable = [
         'nombre',
@@ -28,7 +32,6 @@ class Evento extends Model
     {
         return [
             'fecha' => 'date',
-            'hora' => 'datetime',
             'precio' => 'decimal:2',
             'capacidad' => 'integer',
         ];

@@ -10,6 +10,9 @@ class Producto extends Model
 {
     use HasFactory;
 
+    const CATEGORIAS = ['entradas', 'platos principales', 'acompañamientos', 'postres', 'bebidas'];
+    const ESTADOS = ['disponible', 'agotado', 'inactivo'];
+
     /** @var list<string> */
     protected $fillable = [
         'nombre',

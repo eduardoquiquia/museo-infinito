@@ -11,12 +11,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    const ROLES = ['usuario', 'admin'];
+    const ESTADOS = ['activo', 'inactivo'];
+
     /** @var list<string> */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'rol',
+        'role',
         'estado'
     ];
 

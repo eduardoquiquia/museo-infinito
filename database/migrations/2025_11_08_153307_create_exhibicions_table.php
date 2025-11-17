@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('exhibicions', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->index();
+            $table->string('titulo')->index();
             $table->text('descripcion');
             $table->enum('categoria', ['arqueologia', 'historia', 'fossiles', 'arte', 'antiguedades'])->index();
             $table->string('ruta_imagen_360')->nullable();
@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('fecha_descubrimiento')->nullable()->index();
             $table->string('lugar_hallazgo')->nullable();
             $table->text('descripcion_detallada')->nullable();
+            $table->boolean('destacada')->default(false);
         });
     }
 

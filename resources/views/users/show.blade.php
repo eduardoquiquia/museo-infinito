@@ -13,14 +13,14 @@
                         Detalles del Usuario
                     </h4>
                     <div class="flex space-x-2">
-                        <a href="{{ route('usuarios.edit', $usuario->id) }}" 
+                        <a href="{{ route('users.edit', $user->id) }}" 
                             class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded-lg transition duration-200 flex items-center">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
                             Editar
                         </a>
-                        <a href="{{ route('usuarios.index') }}" 
+                        <a href="{{ route('users.index') }}" 
                             class="bg-neutral-700 hover:bg-neutral-600 text-white font-semibold px-4 py-2 rounded-lg transition duration-200 flex items-center">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -48,7 +48,7 @@
                             </svg>
                             NOMBRE COMPLETO
                         </label>
-                        <p class="text-white text-lg font-semibold">{{ $usuario->name }}</p>
+                        <p class="text-white text-lg font-semibold">{{ $user->name }}</p>
                     </div>
 
                     <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
@@ -58,7 +58,7 @@
                             </svg>
                             CORREO ELECTRÓNICO
                         </label>
-                        <p class="text-white text-lg font-semibold break-all">{{ $usuario->email }}</p>
+                        <p class="text-white text-lg font-semibold break-all">{{ $user->email }}</p>
                     </div>
 
                     <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
@@ -68,7 +68,7 @@
                             </svg>
                             ROL
                         </label>
-                        @if($usuario->rol == 'admin')
+                        @if($user->rol == 'admin')
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-yellow-500 text-black">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -92,7 +92,7 @@
                             </svg>
                             ESTADO
                         </label>
-                        @if($usuario->estado == 'activo')
+                        @if($user->estado == 'activo')
                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-green-500 text-white">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -117,7 +117,7 @@
                             FECHA DE REGISTRO
                         </label>
                         <p class="text-white text-lg font-semibold">
-                            {{ $usuario->created_at ? $usuario->created_at->format('d/m/Y H:i:s') : 'No disponible' }}
+                            {{ $user->created_at ? $user->created_at->format('d/m/Y H:i:s') : 'No disponible' }}
                         </p>
                     </div>
 
@@ -129,7 +129,7 @@
                             ÚLTIMA ACTUALIZACIÓN
                         </label>
                         <p class="text-white text-lg font-semibold">
-                            {{ $usuario->updated_at ? $usuario->updated_at->format('d/m/Y H:i:s') : 'No disponible' }}
+                            {{ $user->updated_at ? $user->updated_at->format('d/m/Y H:i:s') : 'No disponible' }}
                         </p>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                         </svg>
                         <label class="text-gray-400 text-sm block mb-2">TARJETAS ASIGNADAS</label>
-                        <p class="text-white text-3xl font-bold">{{ $usuario->tarjetas->count() }}</p>
+                        <p class="text-white text-3xl font-bold">{{ $user->tarjetas->count() }}</p>
                     </div>
 
                     <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-6 text-center">
@@ -150,7 +150,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                         </svg>
                         <label class="text-gray-400 text-sm block mb-2">ENTRADAS REGISTRADAS</label>
-                        <p class="text-white text-3xl font-bold">{{ $usuario->entradas->count() }}</p>
+                        <p class="text-white text-3xl font-bold">{{ $user->entradas->count() }}</p>
                     </div>
 
                     <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-6 text-center">
@@ -158,20 +158,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         <label class="text-gray-400 text-sm block mb-2">RESERVAS ACTIVAS</label>
-                        <p class="text-white text-3xl font-bold">{{ $usuario->reservas->count() }}</p>
+                        <p class="text-white text-3xl font-bold">{{ $user->reservas->count() }}</p>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center mt-8 pt-6 border-t border-neutral-700">
                     <button type="button" 
-                            onclick="confirmDelete({{ $usuario->id }})"
+                            onclick="confirmDelete({{ $user->id }})"
                             class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
                         Eliminar Usuario
                     </button>
-                    <a href="{{ route('usuarios.edit', $usuario->id) }}" 
+                    <a href="{{ route('user.edit', $user->id) }}" 
                         class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-lg transition duration-200 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -184,8 +184,8 @@
     </div>
 </div>
 
-<form id="delete-form-{{ $usuario->id }}" 
-    action="{{ route('usuarios.destroy', $usuario->id) }}" 
+<form id="delete-form-{{ $user->id }}" 
+    action="{{ route('user.destroy', $user->id) }}" 
     method="POST" 
     class="hidden">
     @csrf

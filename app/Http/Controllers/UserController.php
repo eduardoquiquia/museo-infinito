@@ -12,13 +12,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        $usuarios = User::orderBy('name')->paginate(5);
-        return view('usuarios.index', compact('usuarios'));
+        $users = User::orderBy('name')->paginate(5);
+        return view('users.index', compact('users'));
     }
 
     public function create()
     {
-        return view('usuarios.create');
+        $roles = User::ROLES;
+        $estados = User::ESTADOS;
+        return view('users.create', compact('roles', 'estados'));
     }
 
     public function store(Request $request)
@@ -26,21 +28,25 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'rol' => 'required|in:usuario,admin',
-            'estado' => 'required|in:activo,inactivo',
+            'password' => 'required|min:6|confirmed',
+            'role' => 'required|in:' . implode(',', User::ROLES),
+            'estado' => 'required|in:' . implode(',', User::ESTADOS),
         ]);
 
         try {
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'rol' => $request->rol,
+                'role' => $request->role,
                 'estado' => $request->estado
             ]);
 
-            return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
+            if ($user->esAdmin()) {
+                Log::info("Nuevo administrador creado: {$user->email}");
+            }
+
+            return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error creando usuario: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Ocurrió un error al crear el usuario.');
@@ -49,14 +55,16 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        $usuario = User::findOrFail($id);
-        return view('usuarios.show', compact('usuario'));
+        $user = User::findOrFail($id);
+        return view('users.show', compact('user'));
     }
 
     public function edit(string $id)
     {
-        $usuario = User::findOrFail($id);
-        return view('usuarios.edit', compact('usuario'));
+        $user = User::findOrFail($id);
+        $roles = User::ROLES;
+        $estados = User::ESTADOS;
+        return view('users.edit', compact('user', 'roles', 'estados'));
     }
 
     public function update(Request $request, string $id)
@@ -64,28 +72,20 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:6|confirmed',
-            'rol' => 'required|in:usuario,admin',
-            'estado' => 'required|in:activo,inactivo',
+            'role' => 'required|in:' . implode(',', User::ROLES),
+            'estado' => 'required|in:' . implode(',', User::ESTADOS),
         ]);
 
         try {
-            $usuario = User::findOrFail($id);
-
-            $datos = [
+            $user = User::findOrFail($id);
+            $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'rol' => $request->rol,
+                'role' => $request->role,
                 'estado' => $request->estado
-            ];
+            ]);
 
-            if (!empty($request->password)) {
-                $datos['password'] = Hash::make($request->password);
-            }
-
-            $usuario->update($datos);
-
-            return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
+            return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error actualizando usuario: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Ocurrió un error al actualizar el usuario.');
@@ -95,10 +95,10 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            $usuario = User::findOrFail($id);
-            $usuario->delete();
+            $user = User::findOrFail($id);
+            $user->delete();
 
-            return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado exitosamente.');
+            return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
         } catch (Exception $e) {
             Log::error('Error eliminando usuario: ' . $e->getMessage());
             return back()->with('error', 'Ocurrió un error al eliminar el usuario.');

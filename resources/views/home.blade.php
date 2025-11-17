@@ -9,7 +9,6 @@
 </head>
 <body class="bg-black text-white font-sans">
 
-  <!-- Navbar -->
   <nav class="border-b border-yellow-600 flex justify-between items-center px-10 py-5 bg-black/80 fixed w-full top-0 z-50">
     <div class="flex items-center gap-2">
       <div class="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">

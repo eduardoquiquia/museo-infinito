@@ -11,28 +11,28 @@ class ExhibicionController extends Controller
 {
     public function index()
     {
-        $exhibiciones = Exhibicion::orderBy('nombre')->paginate(5);
+        $exhibiciones = Exhibicion::orderBy('titulo')->paginate(5);
         return view('exhibiciones.index', compact('exhibiciones'));
     }
 
     public function create()
     {
-        $categorias = ['arqueologia', 'historia', 'fossiles', 'arte', 'antiguedades'];
-
+        $categorias = Exhibicion::CATEGORIAS;
         return view('exhibiciones.create', compact('categorias'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:200',
+            'titulo' => 'required|string|max:200',
             'descripcion' => 'required|string',
-            'categoria' => 'required|string',
+            'categoria' => 'required|in:' . implode(',', Exhibicion::CATEGORIAS),
             'ruta_imagen_360' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:4096',
             'periodo' => 'nullable|string|max:200',
             'fecha_descubrimiento' => 'nullable|date',
             'lugar_hallazgo' => 'nullable|string|max:200',
             'descripcion_detallada' => 'nullable|string',
+            'destacada' => 'nullable|boolean'
         ]);
 
         try {
@@ -43,14 +43,15 @@ class ExhibicionController extends Controller
             }
 
             Exhibicion::create([
-                'nombre' => $request->nombre,
+                'titulo' => $request->titulo,
                 'descripcion' => $request->descripcion,
                 'categoria' => $request->categoria,
                 'ruta_imagen_360' => $ruta360,
                 'periodo' => $request->periodo,
                 'fecha_descubrimiento' => $request->fecha_descubrimiento,
                 'lugar_hallazgo' => $request->lugar_hallazgo,
-                'descripcion_detallada' => $request->descripcion_detallada
+                'descripcion_detallada' => $request->descripcion_detallada,
+                'destacada' => $request->destacada,
             ]);
 
             return redirect()->route('exhibiciones.index')->with('success', 'Exhibición creada exitosamente.');
@@ -70,7 +71,7 @@ class ExhibicionController extends Controller
     public function edit(string $id)
     {
         $exhibicion = Exhibicion::findOrFail($id);
-        $categorias = ['arqueologia', 'historia', 'fossiles', 'arte', 'antiguedades'];
+        $categorias = Exhibicion::CATEGORIAS;
 
         return view('exhibiciones.edit', compact('exhibicion', 'categorias'));
     }
@@ -78,27 +79,29 @@ class ExhibicionController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'nombre' => 'required|string|max:200',
+            'titulo' => 'required|string|max:200',
             'descripcion' => 'required|string',
-            'categoria' => 'required|string',
+            'categoria' => 'required|in:' . implode(',', Exhibicion::CATEGORIAS),
             'ruta_imagen_360' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:4096',
             'periodo' => 'nullable|string|max:200',
             'fecha_descubrimiento' => 'nullable|date',
             'lugar_hallazgo' => 'nullable|string|max:200',
             'descripcion_detallada' => 'nullable|string',
+            'destacada' => 'nullable|boolean'
         ]);
 
         try {
             $exhibicion = Exhibicion::findOrFail($id);
 
             $datos = [
-                'nombre' => $request->nombre,
+                'titulo' => $request->titulo,
                 'descripcion' => $request->descripcion,
                 'categoria' => $request->categoria,
                 'periodo' => $request->periodo,
                 'fecha_descubrimiento' => $request->fecha_descubrimiento,
                 'lugar_hallazgo' => $request->lugar_hallazgo,
-                'descripcion_detallada' => $request->descripcion_detallada
+                'descripcion_detallada' => $request->descripcion_detallada,
+                'destacada' => $request->destacada
             ];
 
             if ($request->hasFile('ruta_imagen_360')) {

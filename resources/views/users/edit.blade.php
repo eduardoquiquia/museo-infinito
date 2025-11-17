@@ -12,7 +12,7 @@
                         </svg>
                         Editar Usuario
                     </h4>
-                    <a href="{{ route('usuarios.index') }}" class="text-gray-400 hover:text-white transition duration-150">
+                    <a href="{{ route('users.index') }}" class="text-gray-400 hover:text-white transition duration-150">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -32,10 +32,10 @@
                     </div>
                 @endif
 
-                <form action="{{ route('usuarios.update', $usuario->id) }}" method="POST">
+                <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    @include('usuarios._form', ['buttonText' => 'Actualizar Usuario'])
+                    @include('users._form', ['buttonText' => 'Actualizar Usuario'])
                 </form>
             </div>
         </div>

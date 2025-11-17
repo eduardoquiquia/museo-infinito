@@ -3,134 +3,124 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProductoController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Producto::query();
+        $productos = Producto::orderBy('nombre')->paginate(5);
+        return view('productos.index', compact('productos'));
+    }
 
-        if ($request->has('categoria')) {
-            $query->where('categoria', $request->categoria);
-        }
+    public function create()
+    {
+        $categorias = Producto::CATEGORIAS;
+        $estados = Producto::ESTADOS;
 
-        if ($request->has('estado')) {
-            $query->where('estado', $request->estado);
-        }
-
-        if ($request->has('nombre')) {
-            $query->where('nombre', 'like', '%' . $request->nombre . '%');
-        }
-
-        $productos = $query->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $productos
-        ]);
+        return view('productos.create', compact('categorias', 'estados'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'categoria' => 'required|string',
+        $request->validate([
+            'nombre' => 'required|string|max:200',
+            'descripcion' => 'required|string',
+            'categoria' => 'required|in:' . implode(',', Producto::CATEGORIAS),
             'precio' => 'required|numeric|min:0',
-            'estado' => 'in:disponible,agotado,inactivo',
-            'ruta_imagen' => 'nullable|image|max:4096'
+            'ruta_imagen' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
+            'estado' => 'required|in:' . implode(',', Producto::ESTADOS),
         ]);
 
-        if ($request->hasFile('ruta_imagen')) {
-            $data['ruta_imagen'] = $request->file('ruta_imagen')->store('productos', 'public');
+        try {
+            $rutaImagen = null;
+
+            if ($request->hasFile('ruta_imagen')) {
+                $rutaImagen = $request->file('ruta_imagen')->store('productos', 'public');
+            }
+
+            Producto::create([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'categoria' => $request->categoria,
+                'precio' => $request->precio,
+                'ruta_imagen' => $rutaImagen,
+                'estado' => $request->estado,
+            ]);
+
+            return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
+
+        } catch (Exception $e) {
+            Log::error('Error creando producto: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Ocurrió un error al crear el producto.');
         }
-
-        $producto = Producto::create($data);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Producto creado correctamente.',
-            'data' => $producto
-        ], 201);
     }
 
-    public function show($id)
+    public function show(string $id)
     {
-        $producto = Producto::find($id);
+        $producto = Producto::findOrFail($id);
+        return view('productos.show', compact('producto'));
+    }
 
-        if (!$producto) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Producto no encontrado.'
-            ], 404);
-        }
+    public function edit(string $id)
+    {
+        $producto = Producto::findOrFail($id);
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $producto
-        ]);
+        $categorias = Producto::CATEGORIAS;
+        $estados = Producto::ESTADOS;
+
+        return view('productos.edit', compact('producto', 'categorias', 'estados'));
     }
 
     public function update(Request $request, $id)
     {
-        $producto = Producto::find($id);
-
-        if (!$producto) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Producto no encontrado.'
-            ], 404);
-        }
-
-        $data = $request->validate([
-            'nombre' => 'string|max:255',
-            'descripcion' => 'nullable|string',
-            'categoria' => 'string',
-            'precio' => 'numeric|min:0',
-            'estado' => 'in:disponible,agotado,inactivo',
-            'ruta_imagen' => 'nullable|image|max:4096'
+        $request->validate([
+            'nombre' => 'required|string|max:200',
+            'descripcion' => 'required|string',
+            'categoria' => 'required|in:' . implode(',', Producto::CATEGORIAS),
+            'precio' => 'required|numeric|min:0',
+            'ruta_imagen' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
+            'estado' => 'required|in:' . implode(',', Producto::ESTADOS),
         ]);
+        
+        try {
+            $producto = Producto::findOrFail($id);
 
-        if ($request->hasFile('ruta_imagen')) {
+            $datos = [
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'categoria' => $request->categoria,
+                'precio' => $request->precio,
+                'estado' => $request->estado
+            ];
 
-            if ($producto->ruta_imagen && Storage::disk('public')->exists($producto->ruta_imagen)) {
-                Storage::disk('public')->delete($producto->ruta_imagen);
+            if ($request->hasFile('ruta_imagen')) {
+                $datos['ruta_imagen'] = $request->file('ruta_imagen')->store('productos', 'public');
             }
 
-            $data['ruta_imagen'] = $request->file('ruta_imagen')->store('productos', 'public');
+            $producto->update($datos);
+
+            return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
+
+        } catch (Exception $e) {
+            Log::error('Error actualizando producto: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Ocurrió un error al actualizar el producto.');
         }
-
-        $producto->update($data);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Producto actualizado correctamente.',
-            'data' => $producto
-        ]);
     }
 
     public function destroy($id)
     {
-        $producto = Producto::find($id);
+        try {
+            $producto = Producto::findOrFail($id);
+            $producto->delete();
 
-        if (!$producto) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Producto no encontrado.'
-            ], 404);
+            return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');
+
+        } catch (Exception $e) {
+            Log::error('Error eliminando producto: ' . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error al eliminar el producto.');
         }
-
-        if ($producto->ruta_imagen && Storage::disk('public')->exists($producto->ruta_imagen)) {
-            Storage::disk('public')->delete($producto->ruta_imagen);
-        }
-
-        $producto->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Producto eliminado correctamente.'
-        ]);
     }
 }

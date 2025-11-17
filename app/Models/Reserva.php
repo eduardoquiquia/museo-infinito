@@ -11,6 +11,8 @@ class Reserva extends Model
 {
     use HasFactory;
 
+    const ESTADOS = ['pendiente', 'confirmada', 'cancelada'];
+
     /** @var list<string> */
     protected $fillable = [
         'user_id',

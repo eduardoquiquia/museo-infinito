@@ -17,10 +17,11 @@ class EventoController extends Controller
 
     public function create()
     {
-        $ubicaciones = ['auditorio', 'campus', 'virtual'];
-        $categorias = ['musica', 'teatro', 'deporte', 'conferencia'];
+        $ubicaciones = Evento::UBICACIONES;
+        $categorias = Evento::CATEGORIAS;
+        $estados = Evento::ESTADOS;
 
-        return view('eventos.create', compact('ubicaciones', 'categorias'));
+        return view('eventos.create', compact('ubicaciones', 'categorias', 'estados'));
     }
 
     public function store(Request $request)
@@ -30,12 +31,12 @@ class EventoController extends Controller
             'descripcion' => 'required|string',
             'fecha' => 'required|date|after_or_equal:today',
             'hora' => 'required|date_format:H:i',
-            'ubicacion' => 'required|string',
-            'categoria' => 'required|string',
+            'ubicacion' => 'required|in:' . implode(',', Evento::UBICACIONES),
+            'categoria' => 'required|in:' . implode(',', Evento::CATEGORIAS),
             'precio' => 'required|numeric|min:0',
             'capacidad' => 'required|integer|min:1',
             'ruta_imagen' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
-            'estado' => 'required|in:activo,inactivo,cancelado',
+            'estado' => 'required|in:' . implode(',', Evento::ESTADOS),
         ]);
 
         try {
@@ -76,10 +77,11 @@ class EventoController extends Controller
     {
         $evento = Evento::findOrFail($id);
 
-        $ubicaciones = ['auditorio', 'campus', 'virtual'];
-        $categorias = ['musica', 'teatro', 'deporte', 'conferencia'];
+        $ubicaciones = Evento::UBICACIONES;
+        $categorias = Evento::CATEGORIAS;
+        $estados = Evento::ESTADOS;
 
-        return view('eventos.edit', compact('evento', 'ubicaciones', 'categorias'));
+        return view('eventos.edit', compact('evento', 'ubicaciones', 'categorias', 'estados'));
     }
 
     public function update(Request $request, string $id)
@@ -89,12 +91,12 @@ class EventoController extends Controller
             'descripcion' => 'required|string',
             'fecha' => 'required|date',
             'hora' => 'required|date_format:H:i',
-            'ubicacion' => 'required|string',
-            'categoria' => 'required|string',
+            'ubicacion' => 'required|in:' . implode(',', Evento::UBICACIONES),
+            'categoria' => 'required|in:' . implode(',', Evento::CATEGORIAS),
             'precio' => 'required|numeric|min:0',
             'capacidad' => 'required|integer|min:1',
             'ruta_imagen' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
-            'estado' => 'required|in:activo,inactivo,cancelado',
+            'estado' => 'required|in:' . implode(',', Evento::ESTADOS),
         ]);
 
         try {

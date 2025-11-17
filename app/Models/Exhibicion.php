@@ -9,16 +9,19 @@ class Exhibicion extends Model
 {
     use HasFactory;
 
+    const CATEGORIAS = ['arqueologia', 'historia', 'fossiles', 'arte', 'antiguedades'];
+
     /** @var list<string> */
     protected $fillable = [
-        'nombre',
+        'titulo',
         'descripcion',
         'categoria',
         'ruta_imagen_360',
         'periodo',
         'fecha_descubrimiento',
         'lugar_hallazgo',
-        'descripcion_detallada'
+        'descripcion_detallada',
+        'destacada'
     ];
 
     /** @return array<string, */
@@ -26,6 +29,7 @@ class Exhibicion extends Model
     {
         return [
             'fecha_descubrimiento' => 'date',
+            'destacada' => 'boolean',
         ];
     }
 
